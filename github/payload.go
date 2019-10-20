@@ -215,37 +215,20 @@ type GollumPayload struct {
 
 // InstallationPayload contains the information for GitHub's installation and integration_installation hook events
 type InstallationPayload struct {
-	Action       string          `json:"action"`
-	Installation InstallationObj `json:"installation"`
-	Repositories []struct {
-		ID       int64  `json:"id"`
-		Name     string `json:"name"`
-		FullName string `json:"full_name"`
-		Private  bool   `json:"private"`
-	} `json:"repositories"`
-	Sender User `json:"sender"`
+	Action       string                   `json:"action"`
+	Installation InstallationObj          `json:"installation"`
+	Repositories []InstallationRepository `json:"repositories"`
+	Sender       User                     `json:"sender"`
 }
 
 // InstallationRepositoriesPayload contains the information for GitHub's installation_repositories hook events
 type InstallationRepositoriesPayload struct {
-	Action              string          `json:"action"`
-	RepositorySelection string          `json:"repository_selection"`
-	Installation        InstallationObj `json:"installation"`
-	RepositoriesAdded   []struct {
-		ID       int64  `json:"id"`
-		NodeID   string `json:"node_id"`
-		Name     string `json:"name"`
-		FullName string `json:"full_name"`
-		Private  bool   `json:"private"`
-	} `json:"repositories_added"`
-	RepositoriesRemoved []struct {
-		ID       int64  `json:"id"`
-		NodeID   string `json:"node_id"`
-		Name     string `json:"name"`
-		FullName string `json:"full_name"`
-		Private  bool   `json:"private"`
-	} `json:"repositories_removed"`
-	Sender User `json:"sender"`
+	Action              string                   `json:"action"`
+	RepositorySelection string                   `json:"repository_selection"`
+	Installation        InstallationObj          `json:"installation"`
+	RepositoriesAdded   []InstallationRepository `json:"repositories_added"`
+	RepositoriesRemoved []InstallationRepository `json:"repositories_removed"`
+	Sender              User                     `json:"sender"`
 }
 
 // IssueCommentPayload contains the information for GitHub's issue_comment hook event
@@ -1443,4 +1426,13 @@ type InstallationObj struct {
 	CreatedAt           int64          `json:"created_at"`
 	UpdatedAt           int64          `json:"updated_at"`
 	SingleFileName      *string        `json:"single_file_name"`
+}
+
+// InstallationRepository contains repository information in Installation and InstallationRepositories payloads
+type InstallationRepository struct {
+	ID       int64  `json:"id"`
+	NodeID   string `json:"node_id"`
+	Name     string `json:"name"`
+	FullName string `json:"full_name"`
+	Private  bool   `json:"private"`
 }
