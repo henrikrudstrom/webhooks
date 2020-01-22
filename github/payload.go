@@ -233,23 +233,25 @@ type InstallationRepositoriesPayload struct {
 
 // IssueCommentPayload contains the information for GitHub's issue_comment hook event
 type IssueCommentPayload struct {
-	Action  string `json:"action"`
-	Issue   Issue  `json:"issue"`
-	Comment struct {
-		URL               string    `json:"url"`
-		HTMLURL           string    `json:"html_url"`
-		IssueURL          string    `json:"issue_url"`
-		ID                int64     `json:"id"`
-		NodeID            string    `json:"node_id"`
-		User              User      `json:"user"`
-		CreatedAt         time.Time `json:"created_at"`
-		UpdatedAt         time.Time `json:"updated_at"`
-		Body              string    `json:"body"`
-		AuthorAssociation string    `json:"author_association"`
-	} `json:"comment"`
+	Action       string       `json:"action"`
+	Issue        Issue        `json:"issue"`
+	Comment      Comment      `json:"comment"`
 	Repository   Repository   `json:"repository"`
 	Sender       User         `json:"sender"`
 	Installation Installation `json:"installation"`
+}
+
+type Comment struct {
+	URL               string    `json:"url"`
+	HTMLURL           string    `json:"html_url"`
+	IssueURL          string    `json:"issue_url"`
+	ID                int64     `json:"id"`
+	NodeID            string    `json:"node_id"`
+	User              User      `json:"user"`
+	CreatedAt         time.Time `json:"created_at"`
+	UpdatedAt         time.Time `json:"updated_at"`
+	Body              string    `json:"body"`
+	AuthorAssociation string    `json:"author_association"`
 }
 
 // IssuesPayload contains the information for GitHub's issues hook event
@@ -293,25 +295,31 @@ type MembershipPayload struct {
 
 // MetaPayload contains the information for GitHub's meta hook event
 type MetaPayload struct {
-	HookID int    `json:"hook_id"`
-	Action string `json:"action"`
-	Hook   struct {
-		Type   string   `json:"type"`
-		ID     int64    `json:"id"`
-		Name   string   `json:"name"`
-		Active bool     `json:"active"`
-		Events []string `json:"events"`
-		Config struct {
-			ContentType string `json:"content_type"`
-			InsecureSSL string `json:"insecure_ssl"`
-			URL         string `json:"url"`
-		} `json:"config"`
-		CreatedAt time.Time `json:"created_at"`
-		UpdatedAt time.Time `json:"updated_at"`
-	} `json:"hook"`
+	HookID       int          `json:"hook_id"`
+	Action       string       `json:"action"`
+	Hook         Hook         `json:"hook"`
 	Repository   Repository   `json:"repository"`
 	Sender       User         `json:"sender"`
 	Installation Installation `json:"installation"`
+}
+
+type Hook struct {
+	Type      string     `json:"type"`
+	ID        int64      `json:"id"`
+	NodeID    string     `json:"node_id"`
+	Name      string     `json:"name"`
+	Active    bool       `json:"active"`
+	Events    []string   `json:"events"`
+	AppID     int        `json:"app_id"`
+	Config    HookConfig `json:"config"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+}
+
+type HookConfig struct {
+	ContentType string `json:"content_type"`
+	InsecureSSL string `json:"insecure_ssl"`
+	URL         string `json:"url"`
 }
 
 // MilestonePayload contains the information for GitHub's milestone hook event
@@ -325,17 +333,18 @@ type MilestonePayload struct {
 
 // OrganizationPayload contains the information for GitHub's organization hook event
 type OrganizationPayload struct {
-	Action     string `json:"action"`
-	Membership struct {
-		URL             string `json:"url"`
-		State           string `json:"state"`
-		Role            string `json:"role"`
-		OrganizationURL string `json:"organization_url"`
-		User            User   `json:"user"`
-	} `json:"membership"`
+	Action       string       `json:"action"`
+	Membership   Membership   `json:"membership"`
 	Organization Organization `json:"organization"`
 	Sender       User         `json:"sender"`
 	Installation Installation `json:"installation"`
+}
+type Membership struct {
+	URL             string `json:"url"`
+	State           string `json:"state"`
+	Role            string `json:"role"`
+	OrganizationURL string `json:"organization_url"`
+	User            User   `json:"user"`
 }
 
 // OrgBlockPayload contains the information for GitHub's org_block hook event
@@ -349,108 +358,97 @@ type OrgBlockPayload struct {
 
 // PageBuildPayload contains the information for GitHub's page_build hook event
 type PageBuildPayload struct {
-	ID    int64 `json:"id"`
-	Build struct {
-		URL    string `json:"url"`
-		Status string `json:"status"`
-		Error  struct {
-			Message *string `json:"message"`
-		} `json:"error"`
-		Pusher    User      `json:"pusher"`
-		Commit    string    `json:"commit"`
-		Duration  int64     `json:"duration"`
-		CreatedAt time.Time `json:"created_at"`
-		UpdatedAt time.Time `json:"updated_at"`
-	} `json:"build"`
+	ID           int64        `json:"id"`
+	Build        Build        `json:"build"`
 	Repository   Repository   `json:"repository"`
 	Sender       User         `json:"sender"`
 	Installation Installation `json:"installation"`
 }
+type Build struct {
+	URL    string `json:"url"`
+	Status string `json:"status"`
+	Error  struct {
+		Message *string `json:"message"`
+	} `json:"error"`
+	Pusher    User      `json:"pusher"`
+	Commit    string    `json:"commit"`
+	Duration  int64     `json:"duration"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
 
 // PingPayload contains the information for GitHub's ping hook event
 type PingPayload struct {
-	HookID int `json:"hook_id"`
-	Hook   struct {
-		Type   string   `json:"type"`
-		ID     int64    `json:"id"`
-		NodeID string   `json:"node_id"`
-		Name   string   `json:"name"`
-		Active bool     `json:"active"`
-		Events []string `json:"events"`
-		AppID  int      `json:"app_id"`
-		Config struct {
-			ContentType string `json:"content_type"`
-			InsecureSSL string `json:"insecure_ssl"`
-			Secret      string `json:"secret"`
-			URL         string `json:"url"`
-		} `json:"config"`
-		CreatedAt time.Time `json:"created_at"`
-		UpdatedAt time.Time `json:"updated_at"`
-	} `json:"hook"`
+	HookID     int        `json:"hook_id"`
+	Hook       Hook       `json:"hook"`
 	Repository Repository `json:"repository"`
 	Sender     User       `json:"sender"`
 }
 
 // ProjectCardPayload contains the information for GitHub's project_payload hook event
 type ProjectCardPayload struct {
-	Action      string `json:"action"`
-	ProjectCard struct {
-		URL        string    `json:"url"`
-		ColumnURL  string    `json:"column_url"`
-		ColumnID   int64     `json:"column_id"`
-		ID         int64     `json:"id"`
-		NodeID     string    `json:"node_id"`
-		Note       *string   `json:"note"`
-		Archived   bool      `json:"archived"`
-		ProjectURL string    `json:"project_url"`
-		Creator    User      `json:"creator"`
-		CreatedAt  time.Time `json:"created_at"`
-		UpdatedAt  time.Time `json:"updated_at"`
-	} `json:"project_card"`
+	Action       string       `json:"action"`
+	ProjectCard  ProjectCard  `json:"project_card"`
 	Repository   Repository   `json:"repository"`
 	Sender       User         `json:"sender"`
 	Installation Installation `json:"installation"`
+}
+
+type ProjectCard struct {
+	URL        string    `json:"url"`
+	ColumnURL  string    `json:"column_url"`
+	ColumnID   int64     `json:"column_id"`
+	ID         int64     `json:"id"`
+	NodeID     string    `json:"node_id"`
+	Note       *string   `json:"note"`
+	Archived   bool      `json:"archived"`
+	ProjectURL string    `json:"project_url"`
+	Creator    User      `json:"creator"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 // ProjectColumnPayload contains the information for GitHub's project_column hook event
 type ProjectColumnPayload struct {
-	Action        string `json:"action"`
-	ProjectColumn struct {
-		URL        string    `json:"url"`
-		ProjectURL string    `json:"project_url"`
-		CardsURL   string    `json:"cards_url"`
-		ID         int64     `json:"id"`
-		NodeID     string    `json:"node_id"`
-		Name       string    `json:"name"`
-		CreatedAt  time.Time `json:"created_at"`
-		UpdatedAt  time.Time `json:"updated_at"`
-	} `json:"project_column"`
-	Repository   Repository   `json:"repository"`
-	Sender       User         `json:"sender"`
-	Installation Installation `json:"installation"`
+	Action        string        `json:"action"`
+	ProjectColumn ProjectColumn `json:"project_column"`
+	Repository    Repository    `json:"repository"`
+	Sender        User          `json:"sender"`
+	Installation  Installation  `json:"installation"`
+}
+type ProjectColumn struct {
+	URL        string    `json:"url"`
+	ProjectURL string    `json:"project_url"`
+	CardsURL   string    `json:"cards_url"`
+	ID         int64     `json:"id"`
+	NodeID     string    `json:"node_id"`
+	Name       string    `json:"name"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 // ProjectPayload contains the information for GitHub's project hook event
 type ProjectPayload struct {
-	Action  string `json:"action"`
-	Project struct {
-		OwnerURL   string    `json:"owner_url"`
-		URL        string    `json:"url"`
-		ColumnsURL string    `json:"columns_url"`
-		ID         int64     `json:"id"`
-		NodeID     string    `json:"node_id"`
-		Name       string    `json:"name"`
-		Body       string    `json:"body"`
-		Number     int64     `json:"number"`
-		State      string    `json:"state"`
-		HtmlURL    string    `json:"html_url"`
-		Creator    User      `json:"creator"`
-		CreatedAt  time.Time `json:"created_at"`
-		UpdatedAt  time.Time `json:"updated_at"`
-	} `json:"project"`
+	Action       string       `json:"action"`
+	Project      Project      `json:"project"`
 	Repository   Repository   `json:"repository"`
 	Sender       User         `json:"sender"`
 	Installation Installation `json:"installation"`
+}
+type Project struct {
+	OwnerURL   string    `json:"owner_url"`
+	URL        string    `json:"url"`
+	ColumnsURL string    `json:"columns_url"`
+	ID         int64     `json:"id"`
+	NodeID     string    `json:"node_id"`
+	Name       string    `json:"name"`
+	Body       string    `json:"body"`
+	Number     int64     `json:"number"`
+	State      string    `json:"state"`
+	HtmlURL    string    `json:"html_url"`
+	Creator    User      `json:"creator"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 // PublicPayload contains the information for GitHub's public hook event
@@ -462,97 +460,93 @@ type PublicPayload struct {
 
 // PullRequestPayload contains the information for GitHub's pull_request hook event
 type PullRequestPayload struct {
-	Action      string `json:"action"`
-	Number      int64  `json:"number"`
-	PullRequest struct {
-		URL                 string     `json:"url"`
-		ID                  int64      `json:"id"`
-		NodeID              string     `json:"node_id"`
-		HTMLURL             string     `json:"html_url"`
-		DiffURL             string     `json:"diff_url"`
-		PatchURL            string     `json:"patch_url"`
-		IssueURL            string     `json:"issue_url"`
-		Number              int64      `json:"number"`
-		State               string     `json:"state"`
-		Locked              bool       `json:"locked"`
-		Title               string     `json:"title"`
-		AuthorAssociation   string     `json:"author_association"`
-		Draft               bool       `json:"draft"`
-		MaintainerCanModify bool       `json:"maintainer_can_modify"`
-		User                User       `json:"user"`
-		Body                string     `json:"body"`
-		CreatedAt           time.Time  `json:"created_at"`
-		UpdatedAt           time.Time  `json:"updated_at"`
-		ClosedAt            *time.Time `json:"closed_at"`
-		MergedAt            *time.Time `json:"merged_at"`
-		MergeCommitSha      *string    `json:"merge_commit_sha"`
-		Assignee            *User      `json:"assignee"`
-		Assignees           []*User    `json:"assignees"`
-		Milestone           *Milestone `json:"milestone"`
-		CommitsURL          string     `json:"commits_url"`
-		ReviewCommentsURL   string     `json:"review_comments_url"`
-		ReviewCommentURL    string     `json:"review_comment_url"`
-		CommentsURL         string     `json:"comments_url"`
-		StatusesURL         string     `json:"statuses_url"`
-		RequestedReviewers  []*User    `json:"requested_reviewers"`
-		RequestedTeams      []*Team    `json:"requested_teams"`
-		Labels              []*Label   `json:"labels"`
-		Head                struct {
-			Label string     `json:"label"`
-			Ref   string     `json:"ref"`
-			Sha   string     `json:"sha"`
-			User  User       `json:"user"`
-			Repo  Repository `json:"repo"`
-		} `json:"head"`
-		Base struct {
-			Label string     `json:"label"`
-			Ref   string     `json:"ref"`
-			Sha   string     `json:"sha"`
-			User  User       `json:"user"`
-			Repo  Repository `json:"repo"`
-		} `json:"base"`
-		Links struct {
-			Self struct {
-				Href string `json:"href"`
-			} `json:"self"`
-			HTML struct {
-				Href string `json:"href"`
-			} `json:"html"`
-			Issue struct {
-				Href string `json:"href"`
-			} `json:"issue"`
-			Comments struct {
-				Href string `json:"href"`
-			} `json:"comments"`
-			ReviewComments struct {
-				Href string `json:"href"`
-			} `json:"review_comments"`
-			ReviewComment struct {
-				Href string `json:"href"`
-			} `json:"review_comment"`
-			Commits struct {
-				Href string `json:"href"`
-			} `json:"commits"`
-			Statuses struct {
-				Href string `json:"href"`
-			} `json:"statuses"`
-		} `json:"_links"`
-		Merged         bool   `json:"merged"`
-		Mergeable      *bool  `json:"mergeable"`
-		Rebaseable     *bool  `json:"rebaseable"`
-		MergeableState string `json:"mergeable_state"`
-		MergedBy       *User  `json:"merged_by"`
-		Comments       int64  `json:"comments"`
-		ReviewComments int64  `json:"review_comments"`
-		Commits        int64  `json:"commits"`
-		Additions      int64  `json:"additions"`
-		Deletions      int64  `json:"deletions"`
-		ChangedFiles   int64  `json:"changed_files"`
-	} `json:"pull_request"`
-	Repository Repository `json:"repository"`
-	Sender     User       `json:"sender"`
+	Action      string      `json:"action"`
+	Number      int64       `json:"number"`
+	PullRequest PullRequest `json:"pull_request"`
+	Repository  Repository  `json:"repository"`
+	Sender      User        `json:"sender"`
 
 	Installation Installation `json:"installation"`
+}
+type PullRequest struct {
+	URL                 string     `json:"url"`
+	ID                  int64      `json:"id"`
+	NodeID              string     `json:"node_id"`
+	HTMLURL             string     `json:"html_url"`
+	DiffURL             string     `json:"diff_url"`
+	PatchURL            string     `json:"patch_url"`
+	IssueURL            string     `json:"issue_url"`
+	Number              int64      `json:"number"`
+	State               string     `json:"state"`
+	Locked              bool       `json:"locked"`
+	Title               string     `json:"title"`
+	AuthorAssociation   string     `json:"author_association"`
+	Draft               bool       `json:"draft"`
+	MaintainerCanModify bool       `json:"maintainer_can_modify"`
+	User                User       `json:"user"`
+	Body                string     `json:"body"`
+	CreatedAt           time.Time  `json:"created_at"`
+	UpdatedAt           time.Time  `json:"updated_at"`
+	ClosedAt            *time.Time `json:"closed_at"`
+	MergedAt            *time.Time `json:"merged_at"`
+	MergeCommitSha      *string    `json:"merge_commit_sha"`
+	Assignee            *User      `json:"assignee"`
+	Assignees           []*User    `json:"assignees"`
+	Milestone           *Milestone `json:"milestone"`
+	CommitsURL          string     `json:"commits_url"`
+	ReviewCommentsURL   string     `json:"review_comments_url"`
+	ReviewCommentURL    string     `json:"review_comment_url"`
+	CommentsURL         string     `json:"comments_url"`
+	StatusesURL         string     `json:"statuses_url"`
+	RequestedReviewers  []*User    `json:"requested_reviewers"`
+	RequestedTeams      []*Team    `json:"requested_teams"`
+	Labels              []*Label   `json:"labels"`
+	Head                CommitRef  `json:"head"`
+	Base                CommitRef  `json:"base"`
+	Links               struct {
+		Self struct {
+			Href string `json:"href"`
+		} `json:"self"`
+		HTML struct {
+			Href string `json:"href"`
+		} `json:"html"`
+		Issue struct {
+			Href string `json:"href"`
+		} `json:"issue"`
+		Comments struct {
+			Href string `json:"href"`
+		} `json:"comments"`
+		ReviewComments struct {
+			Href string `json:"href"`
+		} `json:"review_comments"`
+		ReviewComment struct {
+			Href string `json:"href"`
+		} `json:"review_comment"`
+		Commits struct {
+			Href string `json:"href"`
+		} `json:"commits"`
+		Statuses struct {
+			Href string `json:"href"`
+		} `json:"statuses"`
+	} `json:"_links"`
+	Merged         bool   `json:"merged"`
+	Mergeable      *bool  `json:"mergeable"`
+	Rebaseable     *bool  `json:"rebaseable"`
+	MergeableState string `json:"mergeable_state"`
+	MergedBy       *User  `json:"merged_by"`
+	Comments       int64  `json:"comments"`
+	ReviewComments int64  `json:"review_comments"`
+	Commits        int64  `json:"commits"`
+	Additions      int64  `json:"additions"`
+	Deletions      int64  `json:"deletions"`
+	ChangedFiles   int64  `json:"changed_files"`
+}
+type CommitRef struct {
+	Label string     `json:"label"`
+	Ref   string     `json:"ref"`
+	Sha   string     `json:"sha"`
+	User  User       `json:"user"`
+	Repo  Repository `json:"repo"`
 }
 
 // ReviewPullRequest is the PullRequest object contained in a pullrequest review payload
